@@ -10,6 +10,52 @@ class SetCard {
     const [shape, fill, count, color] = randomNums;
     return {shape, fill, count, color, id: uuid()};
   }
+  
+  /**
+   * Gets the parameters for canvas.drawImage based on the shape, fill count and color
+   * Returns the parameters to use. (params1 and params2 must be spread.
+   * Destination is an array of 1, 2 or 3 elements for the x-positions to draw.
+   * 
+   */
+  static getDrawingParams({ shape, color, fill, count}) {
+
+      // Convert shape to find pixel location of the sprite
+      let sx = (shape * 450) + (color * 150) + (fill * 50);
+    
+      // Find out how many shapes to draw based on count
+      let destinations;
+  
+      switch (count) {
+        case 0 :
+          destinations = [125];
+          break;
+        case 1:
+          destinations = [100, 150];
+          break;
+        case 2:
+          destinations = [75, 125, 175];
+          break;
+        default:
+          destinations = [];
+      }
+  
+      // Setting up canvas drawImage params
+      const [sourcex, sourcey] = [sx, 0];
+      const [sourcew, sourceh] = [48, 96];
+      const [dest_y, dest_w, dest_h] = [25, 48, 96]
+      
+      const params1 = [
+        sourcex, sourcey,
+        sourcew, sourceh,
+      ];
+
+      const params2 = [
+        dest_y ,dest_w, dest_h
+      ];
+
+      return { params1, destinations, params2 };
+
+  }
 }
 
 export default SetCard;
