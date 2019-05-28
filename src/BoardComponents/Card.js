@@ -24,15 +24,23 @@ class Card extends Component {
       for (let destinationX of destinations) {
         ctx.drawImage(sprite, ...params1, destinationX, ...params2);
       }
-
-
     }
 
   }
 
   render() {
     const { shape, color, fill, count } = this.props;
-  
+    
+    let backgroundColor;
+    const { isClicked } = this.props;
+    
+    if (isClicked) {
+      backgroundColor = '#D3D3D3';
+    } else {
+      backgroundColor = '#ffffff';
+    }
+
+
     return (
       <div
         onClick={this.props.handleClick}>        
@@ -41,7 +49,7 @@ class Card extends Component {
         ref="canvas"
         style={{
           border:'1px solid #000000',
-          backgroundColor: this.props.isClicked ? '#D3D3D3' : '#ffffff' // grey if clicked
+          backgroundColor // grey if clicked
         }}
         ></canvas>
         <img

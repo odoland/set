@@ -1,21 +1,38 @@
-import uuid from 'uuid/v4';
 
-class SetCard {
+class SetCards {
 
-  /** Randomly generates a random set card.
-   * Each attribute is an int from 0, 1, 2
+
+  /** Randomly draws a  single random set card.
+   * Each attr: (shape, fill, count, color) is an int from 0 - 2 (inclusive)
+   * @param {Set} usedSet - Set of id's of cards already drawn
    */
-  static generateRandomCard() {
-    const randomNums = Array.from({ length: 4 }, () => ~~(Math.random() * 3));
-    const [shape, fill, count, color] = randomNums;
-    return { shape, fill, count, color, id: uuid() };
+  static generateRandomCard(usedSet) {
+
+    let randomNums;
+    let shape, fill, count, color;
+    let id;
+    do { // Randomly generate a card
+      randomNums = Array.from({ length: 4 }, () => ~~(Math.random() * 3));
+      [shape, fill, count, color] = randomNums;
+      id = `${shape}${fill}${count}${color}`;
+    } while (usedSet.has(id));
+
+    // Prevent duplicates
+    const setCard = { shape, fill, count, color, id};
+    usedSet.add(setCard.id);
+    return setCard;
+  }
+
+  /** Randomly draws an array of unique set cards. 
+   * @param {number} amount - number of cards to draw
+   * @param {Set} usedSet - Set of id's of cards already drawn
+  */
+  static generateRandomCards(amount, usedSet=new Set()) {
+    return Array.from({ length: amount }, () => this.generateRandomCard(usedSet));
   }
 
   /**
    * Gets the parameters for canvas.drawImage based on the shape, fill count and color
-   * Returns the parameters to use. (params1 and params2 must be spread.
-   * Destination is an array of 1, 2 or 3 elements for the x-positions to draw.
-   * 
    */
   static getDrawingParams({ shape, color, fill, count }) {
 
@@ -52,12 +69,12 @@ class SetCard {
     const params2 = [
       dest_y, dest_w, dest_h
     ];
-
+    // Destinations is a list of three parameters
     return { params1, destinations, params2 };
   }
 
   /**
-   * 
+   * Determines whether an array of 3 cards is a set. Returns true/false
    * @param {array} cardsArr - array of sets { shape,  fill , counts , color , id}
    */
   static isASet(cardsArr) {
@@ -75,9 +92,7 @@ class SetCard {
       })
       .reduce((acc, card)  => acc.map((attr, i) => attr + card[i])) // summation
       .every(total => total % 3 === 0); // Check if evenly divisible
-
-
   }
 }
 
-export default SetCard;
+export default SetCards;

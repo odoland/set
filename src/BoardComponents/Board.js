@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SetCard from '../helpers/setcard';
+import SetCards from '../helpers/setcard';
 import Card from './Card';
 import './Board.css';
 
@@ -16,13 +16,15 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [],
+      cards: [], // Stores { shape, fill, color, count, id}
       clicked: [], // Array storing indices of clicked cards, max 3
       score: 0,
+      status: "" // "right", "wrong", or "" (neutral)
     }
 
     this.handleClick = this.handleClick.bind(this);
     this.checkWin = this.checkWin.bind(this);
+    this.drawNewCards = this.drawNewCards.bind(this);
 
   }
 
@@ -30,8 +32,7 @@ class Board extends Component {
   componentWillMount() {
     const { rows, cols } = this.props;
 
-    const cards = Array.from({ length: rows * cols }, () => SetCard.generateRandomCard()); // col
-
+    const cards = SetCards.generateRandomCards(rows*cols); // col
 
     this.setState({ cards });
 
@@ -43,7 +44,9 @@ class Board extends Component {
       this.state.clicked.filter(i => i !== idx)
       : [...this.state.clicked, idx];
 
-    this.setState({ clicked }, this.checkWin);
+    this.setState({ clicked }, () => {
+      setTimeout(()=>this.checkWin(), 300);
+    });
   }
 
   isClicked(idx) {
@@ -53,30 +56,38 @@ class Board extends Component {
   checkWin() {
 
     // Must click 3 cards to check for win
-    const { clicked } = this.state;
+    const { clicked, cards } = this.state;
     if (clicked.length < 3) {
       return;
     }
 
     // Grab card objects
-    const { rows } = this.props;
-    let cards = clicked.map(idx => this.state.cards[idx]);
-    if (SetCard.isASet(cards)) {
-      console.log("Found a set!");
-      // const newCards = Array.from({length: 3}, () => SetCard.generateRandomCard());
-      // TODO: flash green
-      // TODO:  Create helper function for filtering 2D array, and drawing new random cards.
-    } else {
+    const cardsSelected = clicked.map(idx => cards[idx]);
+    
+    // Found a set 
+    if (SetCards.isASet(cardsSelected)) {
+
+      this.setState({
+        cards: this.drawNewCards(),
+        score: this.state.score + 1
+      }, () => this.setState({clicked: []}));
+    } else { // Invalid set
       console.log("Invalid set!");
-      // TODO: Flash red
+      this.setState({clicked: []});
     }
-
-    this.setState({
-      clicked: []
-    })
-
   }
 
+  drawNewCards() {
+    const { cards, clicked } = this.state;
+    const cardsSelected = clicked.map(idx => this.state.cards[idx]);
+
+    // Draw new cards, remove cards selected. 
+    const usedSet = new Set(cards.map(c => c.id));
+    const newCards = SetCards.generateRandomCards(3, usedSet);
+    const oldCards = cards.filter(c => !cardsSelected.includes(c));
+
+    return [...oldCards, ...newCards];
+  }
 
   render() {
     return (
