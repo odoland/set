@@ -11,7 +11,7 @@ class Card extends Component {
 
     // get the ctx.drawImage parameters to draw based on the 4 elements
     const { shape, color, fill, count } = this.props;
-    const {params1, destinations, params2 }= SetCard.getDrawingParams({ shape, color, fill, count}); 
+    const { params1, destinations, params2 } = SetCard.getDrawingParams({ shape, color, fill, count });
 
     // Load the canvas and image to draw on
     const canvas = this.refs.canvas
@@ -20,19 +20,30 @@ class Card extends Component {
 
     // Draw the Set Cards for each x-position destination
     img.onload = () => {
+      // draw image
       for (let destinationX of destinations) {
         ctx.drawImage(sprite, ...params1, destinationX, ...params2);
       }
+
+
     }
 
   }
 
   render() {
     const { shape, color, fill, count } = this.props;
-
+  
     return (
-      <div>
-        <canvas className="Card-Canvas" ref="canvas"></canvas>
+      <div
+        onClick={this.props.handleClick}>        
+      <canvas 
+        className="Card-Canvas" 
+        ref="canvas"
+        style={{
+          border:'1px solid #000000',
+          backgroundColor: this.props.isClicked ? '#D3D3D3' : '#ffffff' // grey if clicked
+        }}
+        ></canvas>
         <img
           src="./img/AllSetCards.png"
           ref='image'
