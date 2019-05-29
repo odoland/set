@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Card.css';
 import SetCard from '../helpers/setcard';
+import { connect } from 'react-redux';
+
 
 class Card extends Component {
 
@@ -25,41 +27,73 @@ class Card extends Component {
         ctx.drawImage(sprite, ...params1, destinationX, ...params2);
       }
     }
+  }
+
+  handleClick = (evt, idx) => {
+    evt.preventDefault();
+
+    // Register click
+    this.props.dispatch({
+      type: 'CLICK',
+      payload: { idx }
+    });
+
+    // Check if there is a win
+    setTimeout(() => this.props.dispatch({type: 'CHECK_CLICKED'}), 400);
+    setTimeout(()=> this.props.dispatch({type: 'STOP_FLASHES'}), 500);
 
   }
 
-  render() {
-    const { shape, color, fill, count } = this.props;
+  getBackgroundColor = () => {
+    const { clicked, status, idx } = this.props;
+    
+    const isClicked = clicked.includes(idx);
     
     let backgroundColor;
-    const { isClicked } = this.props;
+    switch(status) {
+      case 'wrong': // red : white
+        backgroundColor = (isClicked) ? '#ffb2b2' : '#ffffff';
+        break;
+      case 'right':
+        backgroundColor = '#ffffff';
+        break;
+      default: // gray : white
+        backgroundColor = (isClicked) ? '#D3D3D3' : '#ffffff';
+    } 
+
+    return backgroundColor;
+  }
+
+  render() {
+
+    const { shape, color, fill, count, idx } = this.props;
+
+    const backgroundColor = this.getBackgroundColor();
     
-    if (isClicked) {
-      backgroundColor = '#D3D3D3';
-    } else {
-      backgroundColor = '#ffffff';
-    }
-
-
     return (
       <div
-        onClick={this.props.handleClick}>        
-      <canvas 
-        className="Card-Canvas" 
-        ref="canvas"
-        style={{
-          border:'1px solid #000000',
-          backgroundColor // grey if clicked
-        }}
-        ></canvas>
+        onClick={e=>this.handleClick(e, idx)}>        
+        <canvas 
+          className="Card-Canvas" 
+          ref="canvas"
+          style={{
+            border:'1px solid #000000',
+            backgroundColor // grey if clicked
+          }}>
+        </canvas>
         <img
           src="./img/AllSetCards.png"
           ref='image'
           alt={`${shape}${color}${fill}${count}`}
-          hidden />
+          hidden/>
       </div>
     )
   }
 }
 
-export default Card;
+function mapStateToProps(state) {
+  const { cards, clicked, score, status } = state;
+  return { cards, clicked, score, status };
+}
+
+export default connect(mapStateToProps)(Card);
