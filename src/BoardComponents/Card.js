@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Card.css';
 import SetCard from '../helpers/setcard';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 class Card extends Component {
@@ -33,22 +33,17 @@ class Card extends Component {
     evt.preventDefault();
 
     // Register click
-    this.props.dispatch({
-      type: 'CLICK',
-      payload: { idx }
-    });
+    this.props.registerClick(idx);
 
     // Check if there is a win
-    setTimeout(() => this.props.dispatch({type: 'CHECK_CLICKED'}), 400);
-    setTimeout(()=> this.props.dispatch({type: 'STOP_FLASHES'}), 500);
+    setTimeout(this.props.checkClick, 400);
+    setTimeout(this.props.stopFlashes, 500);
 
   }
 
   getBackgroundColor = () => {
     const { clicked, status, idx } = this.props;
-    
     const isClicked = clicked.includes(idx);
-    
     let backgroundColor;
     switch(status) {
       case 'wrong': // red : white
@@ -60,7 +55,6 @@ class Card extends Component {
       default: // gray : white
         backgroundColor = (isClicked) ? '#D3D3D3' : '#ffffff';
     } 
-
     return backgroundColor;
   }
 
@@ -91,9 +85,17 @@ class Card extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { cards, clicked, score, status } = state;
-  return { cards, clicked, score, status };
+Card.propTypes = {
+  shape: PropTypes.oneOf([0,1,2]).isRequired,
+  count: PropTypes.oneOf([0,1,2]).isRequired,
+  color: PropTypes.oneOf([0,1,2]).isRequired,
+  fill: PropTypes.oneOf([0,1,2]).isRequired,
+  idx: PropTypes.number.isRequired,
+
+  registerClick: PropTypes.func.isRequired,
+  checkClick: PropTypes.func.isRequired,
+  stopFlashes: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps)(Card);
+
+export default Card;

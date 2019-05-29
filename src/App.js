@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Board from './BoardComponents/Board';
+import BoardContainer from './BoardContainers/BoardContainer';
 import Timer from './MenuComponents/Timer';
 
 class App extends Component {
@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <div className="App">
         <Timer/>
-        <Board />
+        <BoardContainer />
       </div>
     )
   }

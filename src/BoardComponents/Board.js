@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Card from './Card';
+import CardContainer from '../BoardContainers/CardContainer';
 import './Board.css';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 /**
  * Component for displaying the board
@@ -17,11 +17,7 @@ class Board extends Component {
   componentWillMount() {
 
     const { rows, cols } = this.props;
-
-    this.props.dispatch({
-      type: 'INIT_CARDS',
-      payload: { rows, cols }
-    });
+    this.props.initCards(rows, cols);
   }
 
   render() {
@@ -29,7 +25,7 @@ class Board extends Component {
       <div className="Board-Container">
         {
           this.props.cards.map((card, idx) => (
-            <Card
+            <CardContainer
               idx={idx}
               key={card.id}
               {...card}
@@ -41,9 +37,9 @@ class Board extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { cards, clicked, score, status } = state;
-  return { cards, clicked, score, status };
+Board.propTypes = {
+  cards: PropTypes.array.isRequired,
+  initCards: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps)(Board);
+export default Board;
