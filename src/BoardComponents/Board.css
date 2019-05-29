@@ -1,4 +1,4 @@
 .Board-Container {
   display: grid;
-  grid-template-columns: repeat(4, 400px [col-start]);
+  grid-template-columns: repeat(4, 200px [col-start]);
 }

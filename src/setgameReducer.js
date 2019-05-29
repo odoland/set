@@ -4,7 +4,8 @@ const DEFAULT_STATE = {
   cards: [], // Stores { shape, fill, color, count, id}
   clicked: [], // Array storing indices of clicked cards, max 3
   score: 0,
-  status: "" // "right", "wrong", or "" (neutral)
+  status: "", // "right", "wrong", or "" (neutral)
+  time: 0
 };
 
 
