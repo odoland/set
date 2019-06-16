@@ -12,13 +12,15 @@ const DEFAULT_STATE = {
 function setgameReducer(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case "CLICK":
-      return clickReducer(state, action);
+      return clickHandler(state, action);
     case "CHECK_CLICKED":
-      return checkClickedReducer(state, action);
+      return checkClickedHandler(state, action);
     case "STOP_FLASHES":
-      return stopFlashesReducer(state, action);
+      return stopFlashesHandler(state, action);
     case "INIT_CARDS":
-      return initCardsReducer(state, action);
+      return initCardsHandler(state, action);
+    case "RESET_CLICKED":
+      return resetClickedHandler(state, action);
     default:
       return state;
   }
@@ -27,7 +29,7 @@ function setgameReducer(state = DEFAULT_STATE, action) {
 /** Registers a click of a card.
  * Pushes index of the clicked card to the state.clicked
  */
-function clickReducer(state, action) {
+function clickHandler(state, action) {
 
   const { idx } = action.payload;
   const isClicked = state.clicked.includes(idx);
@@ -39,7 +41,7 @@ function clickReducer(state, action) {
  * If it is a set, draw new cards and increment score
  * else, flash "red" for incorrect
  */
-function checkClickedReducer(state, action) {
+function checkClickedHandler(state, action) {
 
   const { clicked, cards, score } = state;
   if (clicked.length < 3) return state;
@@ -80,7 +82,7 @@ function drawNewCards(state) {
 /**
  * Resets the status and empties the cards clicked.
  */
-function stopFlashesReducer(state, action) {
+function stopFlashesHandler(state, action) {
   // Stops flashes and resets clicked
   const shouldResetFlash = state.clicked.length === 3 && state.status !== '';
   if (shouldResetFlash) {
@@ -93,12 +95,16 @@ function stopFlashesReducer(state, action) {
 /**
  * Initializes the cards
  */
-function initCardsReducer(state, action) {
+function initCardsHandler(state, action) {
   const { rows, cols } = action.payload;
 
   const cards = SetCards.generateRandomCards(rows*cols); // col
 
   return { ...state, cards };
+}
+
+function resetClickedHandler(state, action) {
+  return { ...state, clicked: [], status: ''};
 }
 
 export default setgameReducer;

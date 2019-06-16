@@ -47,10 +47,10 @@ class SetCards {
         destinations = [125];
         break;
       case 1:
-        destinations = [100, 150];
+        destinations = [95, 155];
         break;
       case 2:
-        destinations = [75, 125, 175];
+        destinations = [70, 125, 180];
         break;
       default:
         destinations = [];

@@ -32,6 +32,7 @@ class Board extends Component {
             />
           ))
         }
+        <button id="reset-clicked" onClick={this.props.resetClicked} hidden></button>
         </div>
     )
   }

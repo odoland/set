@@ -10,7 +10,8 @@ const mapDispatchToProps = {
   initCards: ((rows, cols) => ({
     type: 'INIT_CARDS',
     payload: { rows, cols }
-  }))
+  })),
+  resetClicked: () => ({type: 'RESET_CLICKED'})
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);
