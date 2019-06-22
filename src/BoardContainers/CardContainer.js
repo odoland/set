@@ -1,5 +1,6 @@
 import Card from '../BoardComponents/Card';
 import { connect } from 'react-redux';
+import { registerClick, checkClick, stopFlashes } from '../store/actions';
 
 function mapStateToProps(state) {
   const { cards, clicked, score, status } = state;
@@ -7,16 +8,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  registerClick: idx => ({
-    type: 'CLICK',
-    payload: { idx }
-  }),
-  checkClick: () => ({
-    type: 'CHECK_CLICKED',
-  }),
-  stopFlashes: () => ({
-    type: 'STOP_FLASHES'
-  })
+  registerClick,
+  checkClick,
+  stopFlashes
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card);

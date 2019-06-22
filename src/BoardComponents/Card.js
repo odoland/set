@@ -3,10 +3,14 @@ import './Card.css';
 import SetCard from '../helpers/setcard';
 import PropTypes from 'prop-types';
 
-
+/** 
+ * Class that represents a set Card Component 
+ * 
+ */
 class Card extends Component {
 
   componentDidMount() {
+    // Draws a card with canvas
 
     let sprite = new Image();
     sprite.src = "./img/AllSetCards.png";

@@ -1,7 +1,6 @@
 
 class SetCards {
 
-
   /** Randomly draws a  single random set card.
    * Each attr: (shape, fill, count, color) is an int from 0 - 2 (inclusive)
    * @param {Set} usedSet - Set of id's of cards already drawn

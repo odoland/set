@@ -1,4 +1,11 @@
-import SetCards from './helpers/setcard';
+import SetCards from '../helpers/setcard';
+import {
+  CLICK,
+  CHECK_CLICKED, 
+  STOP_FLASHES,
+  INIT_CARDS,
+  RESET_CLICKED,
+} from './actionTypes.js';
 
 const DEFAULT_STATE = {
   cards: [], // Stores { shape, fill, color, count, id}
@@ -11,15 +18,15 @@ const DEFAULT_STATE = {
 
 function setgameReducer(state = DEFAULT_STATE, action) {
   switch (action.type) {
-    case "CLICK":
+    case CLICK:
       return clickHandler(state, action);
-    case "CHECK_CLICKED":
+    case CHECK_CLICKED:
       return checkClickedHandler(state, action);
-    case "STOP_FLASHES":
+    case STOP_FLASHES:
       return stopFlashesHandler(state, action);
-    case "INIT_CARDS":
+    case INIT_CARDS:
       return initCardsHandler(state, action);
-    case "RESET_CLICKED":
+    case RESET_CLICKED:
       return resetClickedHandler(state, action);
     default:
       return state;
@@ -44,7 +51,7 @@ function clickHandler(state, action) {
 function checkClickedHandler(state, action) {
 
   const { clicked, cards, score } = state;
-  if (clicked.length < 3) return state;
+  if (clicked.length < 3) return state; // Don't need to check for a set if they didn't click enough cards
 
   // Grab card objects
   const cardsSelected = clicked.map(idx => cards[idx]);
@@ -60,7 +67,7 @@ function checkClickedHandler(state, action) {
       status: "right"
     }
   } else { // Invalid set
-    console.log("wrong!");
+    console.log("Wrong!");
     return { ...state, status: "wrong" };
   }
 }
@@ -86,7 +93,7 @@ function stopFlashesHandler(state, action) {
   // Stops flashes and resets clicked
   const shouldResetFlash = state.clicked.length === 3 && state.status !== '';
   if (shouldResetFlash) {
-    return {...state, status: '', clicked: []};
+    return { ...state, status: '', clicked: [] };
   } else {
     return state;
   }
@@ -98,13 +105,13 @@ function stopFlashesHandler(state, action) {
 function initCardsHandler(state, action) {
   const { rows, cols } = action.payload;
 
-  const cards = SetCards.generateRandomCards(rows*cols); // col
+  const cards = SetCards.generateRandomCards(rows * cols); // col
 
   return { ...state, cards };
 }
 
 function resetClickedHandler(state, action) {
-  return { ...state, clicked: [], status: ''};
+  return { ...state, clicked: [], status: '' };
 }
 
 export default setgameReducer;

@@ -1,5 +1,6 @@
 import Board from '../BoardComponents/Board';
 import { connect } from 'react-redux';
+import { initCards, resetClicked } from '../store/actions';
 
 function mapStateToProps(state) {
   const { cards, clicked, score, status } = state;
@@ -7,11 +8,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  initCards: ((rows, cols) => ({
-    type: 'INIT_CARDS',
-    payload: { rows, cols }
-  })),
-  resetClicked: () => ({type: 'RESET_CLICKED'})
+  initCards,
+  resetClicked,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);
