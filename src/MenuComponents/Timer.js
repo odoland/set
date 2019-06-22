@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
+import { Navbar, Nav, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import './Timer.css';
 
@@ -8,7 +8,8 @@ class Timer extends Component {
     super(props);
     this.state = {
       seconds: 0
-    }
+    };
+    this.secondsToTime = this.secondsToTime.bind(this);
   }
 
   componentDidMount() {
@@ -24,13 +25,16 @@ class Timer extends Component {
     const date = new Date(1000 * this.state.seconds);
     return date.toISOString().substr(11, 8);
   }
+
   render() {
     return (
-      <div className='Timer'>
-        <Button className='Clock btn-info' disabled>{this.secondsToTime()}</Button>
-        <Button className="btn-primary" disabled> Set Game </Button>
-        <Button className="btn-danger" disabled> Score: {this.props.score} </Button>
-      </div>
+      <Navbar color="dark" light expand="md">
+        <Nav className="mr-auto" navbar>
+          <Button className="btn-secondary" disabled> Set </Button>
+          <Button className='btn-info' disabled>{this.secondsToTime()}</Button>
+          <Button className="btn-danger" disabled> Score: {this.props.score} </Button>
+        </Nav>
+      </Navbar>
     )
   }
 }

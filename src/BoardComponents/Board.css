@@ -1,4 +1,7 @@
 .Board-Container {
   display: grid;
   grid-template-columns: repeat(4, 200px [col-start]);
+  row-gap: 10px;
+  column-gap: 10px;
+  background: url("wood.jpg");
 }
